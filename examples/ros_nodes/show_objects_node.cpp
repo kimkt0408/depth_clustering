@@ -83,13 +83,17 @@ int main(int argc, char* argv[]) {
   ros::init(argc, argv, "show_objects_node");
   ros::NodeHandle nh;
 
-  string topic_clouds = "/velodyne_points";
+  string topic_clouds = "/ns1/velodyne_points";
 
   CloudOdomRosSubscriber subscriber(&nh, *proj_params_ptr, topic_clouds);
   Visualizer visualizer;
   visualizer.show();
 
-  int min_cluster_size = 20;
+  // Default
+  // int min_cluster_size = 20;
+  // int max_cluster_size = 100000;
+
+  int min_cluster_size = 100;
   int max_cluster_size = 100000;
 
   int smooth_window_size = 7;

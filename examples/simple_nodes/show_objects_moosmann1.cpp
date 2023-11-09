@@ -59,10 +59,8 @@ void ReadData(const Radians& angle_tollerance, const string& in_path,
   int smooth_window_size = 5;
   Radians ground_remove_angle = 9_deg;
 
-  // auto image_reader =
-  //     FolderReader(in_path, ".png", FolderReader::Order::SORTED);
   auto image_reader =
-      FolderReader(in_path, ".jpg", FolderReader::Order::SORTED);
+      FolderReader(in_path, ".png", FolderReader::Order::SORTED);
       
   auto config_reader = FolderReader(in_path, "img.cfg");
   auto proj_params_ptr =
