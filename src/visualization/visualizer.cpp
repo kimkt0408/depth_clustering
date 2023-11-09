@@ -64,7 +64,8 @@ void Visualizer::draw() {
 }
 
 void Visualizer::init() {
-  setSceneRadius(100.0);
+  // setSceneRadius(100.0);
+  setSceneRadius(10.0);
   camera()->showEntireScene();
   glDisable(GL_LIGHTING);
 }
