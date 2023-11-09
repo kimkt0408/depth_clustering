@@ -21,7 +21,8 @@
 #ifndef SRC_PROJECTIONS_RING_PROJECTION_H_
 #define SRC_PROJECTIONS_RING_PROJECTION_H_
 
-#include <opencv/cv.h>
+// #include <opencv/cv.h>
+#include <opencv2/imgproc.hpp>  // For ROS Noetic
 
 #include <vector>
 

@@ -21,8 +21,11 @@
 #ifndef SRC_PROJECTIONS_CLOUD_PROJECTION_H_
 #define SRC_PROJECTIONS_CLOUD_PROJECTION_H_
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+// #include <opencv/cv.h>
+// #include <opencv/highgui.h>
+
+#include <opencv2/imgproc.hpp>  // For ROS Noetic
+#include <opencv2/highgui/highgui_c.h>
 
 #include <Eigen/Core>
 

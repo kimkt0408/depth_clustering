@@ -23,8 +23,11 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 
-#include <opencv/cv.h>
-#include <opencv/highgui.h>
+// #include <opencv/cv.h>
+// #include <opencv/highgui.h>
+
+#include <opencv2/imgproc.hpp>
+#include <opencv2/highgui/highgui_c.h>
 
 #include <cassert>
 #include <fstream>
@@ -113,7 +116,8 @@ cv::Mat FixKITTIDepth(const cv::Mat& original) {
 }
 
 cv::Mat MatFromDepthPng(const string& path) {
-  cv::Mat depth_image = cv::imread(path, CV_LOAD_IMAGE_ANYDEPTH);
+  // cv::Mat depth_image = cv::imread(path, CV_LOAD_IMAGE_ANYDEPTH);
+  cv::Mat depth_image = cv::imread(path, cv::IMREAD_ANYDEPTH); // For ROS Noetic
   depth_image.convertTo(depth_image, CV_32F);
   depth_image /= 500.;
   return FixKITTIDepth(depth_image);
