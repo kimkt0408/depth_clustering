@@ -63,7 +63,6 @@ void ReadData(const Radians& angle_tollerance, const string& in_path,
   //     FolderReader(in_path, ".png", FolderReader::Order::SORTED);
   auto image_reader =
       FolderReader(in_path, ".jpg", FolderReader::Order::SORTED);
-      
   auto config_reader = FolderReader(in_path, "img.cfg");
   auto proj_params_ptr =
       ProjectionParams::FromConfigFile(config_reader.GetNextFilePath());

@@ -47,11 +47,11 @@ int main(int argc, char* argv[]) {
       ' ', "1.0");
   TCLAP::ValueArg<int> angle_arg(
       "", "angle",
-      "Threshold angle. Below this value, the objects are separated", false, 10,
+      "Threshold angle. Below this value, the objects are separated", false, 0,
       "int");
   TCLAP::ValueArg<int> num_beams_arg(
       "", "num_beams", "Num of vertical beams in laser. One of: [16, 32, 64].",
-      true, 0, "int");
+      false, 16, "int");
 
   cmd.add(angle_arg);
   cmd.add(num_beams_arg);
@@ -71,6 +71,7 @@ int main(int argc, char* argv[]) {
       proj_params_ptr = ProjectionParams::HDL_64();
       break;
   }
+
   if (!proj_params_ptr) {
     fprintf(stderr,
             "ERROR: wrong number of beams: %d. Should be in [16, 32, 64].\n",
@@ -83,7 +84,7 @@ int main(int argc, char* argv[]) {
   ros::init(argc, argv, "show_objects_node");
   ros::NodeHandle nh;
 
-  string topic_clouds = "/ns1/velodyne_points";
+  string topic_clouds = "/ns2/velodyne_points";
 
   CloudOdomRosSubscriber subscriber(&nh, *proj_params_ptr, topic_clouds);
   Visualizer visualizer;
