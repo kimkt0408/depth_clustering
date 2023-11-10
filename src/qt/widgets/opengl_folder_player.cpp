@@ -248,7 +248,7 @@ void OpenGlFolderPlayer::onSegmentationParamUpdate() {
 
 void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   if (_file_names.empty()) {
-    std::cout << "!!!!!!!" << std::endl;
+  std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: start-----" << std::endl;
     return;
   }
   
@@ -256,14 +256,14 @@ void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   fprintf(stderr, "loading cloud from: %s\n",
           _file_names[cloud_number-1].c_str());
   Timer timer;
-  std::cout << "**********" << std::endl;
+  std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 1-----" << std::endl;
   const auto &file_name = _file_names[cloud_number-1];
-  std::cout << "**********" << std::endl;
+  std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 2-----" << std::endl;
   _cloud = CloudFromFile(file_name, *_proj_params);
-  std::cout << "**********" << std::endl;
+  std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 3-----" << std::endl;
   fprintf(stderr, "[TIMER]: load cloud in %lu microsecs\n",
           timer.measure(Timer::Units::Micro));
-  std::cout << "**********" << std::endl;
+  std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 4-----" << std::endl;
   _current_full_depth_image = _cloud->projection_ptr()->depth_image();
 
   ui->lbl_cloud_name->setText(QString::fromStdString(file_name));
