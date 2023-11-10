@@ -45,7 +45,7 @@
        </property>
        <item>
         <property name="text">
-         <string>.txt</string>
+         <string>.png</string>
         </property>
        </item>
        <item>
@@ -55,7 +55,7 @@
        </item>
        <item>
         <property name="text">
-         <string>.png</string>
+         <string>.txt</string>
         </property>
        </item>
        <item>
@@ -133,7 +133,7 @@
         </size>
        </property>
        <property name="autoFillBackground">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
       </widget>
      </item>

@@ -149,7 +149,9 @@ size_t ProjectionParams::FindClosest(const vector<Radians>& vec,
 
 std::unique_ptr<ProjectionParams> ProjectionParams::VLP_16() {
   auto params = ProjectionParams();
-  params.SetSpan(SpanParams(-180_deg, 180_deg, 870),
+  // params.SetSpan(SpanParams(-180_deg, 180_deg, 870),
+  //                SpanParams::Direction::HORIZONTAL);
+  params.SetSpan(SpanParams(-180_deg, 180_deg, 540),
                  SpanParams::Direction::HORIZONTAL);
   params.SetSpan(SpanParams(15_deg, -15_deg, 16),
                  SpanParams::Direction::VERTICAL);

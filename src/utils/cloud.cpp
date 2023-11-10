@@ -80,9 +80,14 @@ void Cloud::InitProjection(const ProjectionParams& params) {
 
 Cloud::Ptr Cloud::FromImage(const cv::Mat& image,
                             const ProjectionParams& params) {
+  
+  std::cout << "-----/src/utils/cloud.cpp/FromImage: start-----" << std::endl;
   CloudProjection::Ptr proj = CloudProjection::Ptr(new RingProjection(params));
+  std::cout << "-----/src/utils/cloud.cpp/FromImage: 1-----" << std::endl;
   proj->CheckImageAndStorage(image);
+  std::cout << "-----/src/utils/cloud.cpp/FromImage: 2-----" << std::endl;
   proj->CloneDepthImage(image);
+  std::cout << "-----/src/utils/cloud.cpp/FromImage: 3-----" << std::endl;
   Cloud cloud;
   for (int r = 0; r < image.rows; ++r) {
     for (int c = 0; c < image.cols; ++c) {
@@ -94,7 +99,10 @@ Cloud::Ptr Cloud::FromImage(const cv::Mat& image,
       proj->at(r, c).points().push_back(cloud.points().size() - 1);
     }
   }
+
+  std::cout << "-----/src/utils/cloud.cpp/FromImage: 4-----" << std::endl;
   cloud.SetProjectionPtr(proj);
+  std::cout << "-----/src/utils/cloud.cpp/FromImage: end-----" << std::endl;
   // we cannot share ownership of this cloud with others, so create a new one
   return boost::make_shared<Cloud>(cloud);
 }

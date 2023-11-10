@@ -24,6 +24,8 @@
 
 #include "utils/mem_utils.h"
 
+#include <iostream>
+
 namespace depth_clustering {
 
 using mem_utils::make_unique;
@@ -35,6 +37,7 @@ CloudProjection::CloudProjection(const ProjectionParams& params)
   if (!_params.valid()) {
     throw std::runtime_error("_params not valid for projection.");
   }
+
   _data = PointMatrix(_params.cols(), PointColumn(_params.rows()));
   _depth_image =
       cv::Mat::zeros(_params.rows(), _params.cols(), cv::DataType<float>::type);
@@ -62,16 +65,24 @@ void CloudProjection::CheckCloudAndStorage(
 }
 
 void CloudProjection::CheckImageAndStorage(const cv::Mat& image) {
+
+  std::cout << "-----/src/projections/cloud_projection.cpp/CheckImageAndStorage: start-----" << std::endl;
   if (image.type() != CV_32F) {
     throw std::runtime_error("wrong image format");
   }
+
+  std::cout << "-----/src/projections/cloud_projection.cpp/CheckImageAndStorage: 1-----" << std::endl;
   if (this->_data.size() < 1) {
     throw std::length_error("_data size is < 1");
   }
+
+  std::cout << "-----/src/projections/cloud_projection.cpp/CheckImageAndStorage: 2-----" << std::endl;
+  std::cout << this->rows() << " " << static_cast<size_t>(image.rows) << " " << this->cols() << " " << static_cast<size_t>(image.cols) << std::endl;
   if (this->rows() != static_cast<size_t>(image.rows) ||
       this->cols() != static_cast<size_t>(image.cols)) {
     throw std::length_error("_data dimentions do not correspond to image ones");
   }
+  std::cout << "-----/src/projections/cloud_projection.cpp/CheckImageAndStorage: end-----" << std::endl;
 }
 
 void CloudProjection::FixDepthSystematicErrorIfNeeded() {

@@ -254,10 +254,10 @@ void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   
   fprintf(stderr, "slider moved to: %d\n", cloud_number);
   fprintf(stderr, "loading cloud from: %s\n",
-          _file_names[cloud_number-1].c_str());
+          _file_names[cloud_number].c_str());
   Timer timer;
   std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 1-----" << std::endl;
-  const auto &file_name = _file_names[cloud_number-1];
+  const auto &file_name = _file_names[cloud_number];
   std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 2-----" << std::endl;
   _cloud = CloudFromFile(file_name, *_proj_params);
   std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: 3-----" << std::endl;
@@ -307,10 +307,7 @@ void OpenGlFolderPlayer::onOpenFolderToRead() {
                             ui->cmb_extension->currentText().toStdString(),
                             order);
   _file_names = cloud_reader.GetAllFilePaths();
-  // std::cout << _file_names[0] << std::endl;
-  std::cout << "***" << _file_names[0] << std::endl;
   if (_file_names.empty()) {
-    std::cout << "^^^" << std::endl;
     return;
   }
 
@@ -323,10 +320,8 @@ void OpenGlFolderPlayer::onOpenFolderToRead() {
   ui->sldr_navigate_clouds->setEnabled(true);
   ui->spnbx_current_cloud->setEnabled(true);
 
-  std::cout << "&&&" << _file_names[0] << std::endl;
   // focus on the cloud
   _viewer->update();
-  std::cout << "@@@" << _file_names[0] << std::endl;
 }
 
 void OpenGlFolderPlayer::keyPressEvent(QKeyEvent *event) {

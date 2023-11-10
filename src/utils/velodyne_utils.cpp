@@ -122,11 +122,21 @@ cv::Mat MatFromDepthPng(const string& path) {
   // cv::Mat depth_image = cv::imread(path, CV_LOAD_IMAGE_ANYDEPTH);
   std::cout << "-----/src/utils/velodyne_utils.cpp: start-----" << std::endl;
   cv::Mat depth_image = cv::imread(path, cv::IMREAD_ANYDEPTH); // For ROS Noetic
-  std::cout << "-----/src/utils/velodyne_utils.cpp: one-----" << std::endl;
+  std::cout << "-----/src/utils/velodyne_utils.cpp: 1-----" << std::endl;
   depth_image.convertTo(depth_image, CV_32F);
-  std::cout << "-----/src/utils/velodyne_utils.cpp: end-----" << std::endl;
+  std::cout << "-----/src/utils/velodyne_utils.cpp: 2-----" << std::endl;
   depth_image /= 500.;
-  return FixKITTIDepth(depth_image);
+
+  // for (int i = 0; i < depth_image.rows; ++i) {
+  //   for (int j = 0; j < depth_image.cols; ++j) {
+  //       std::cout << depth_image.at<float>(i, j) << " ";
+  //   }
+  //   std::cout << std::endl;
+  // }
+
+  std::cout << "-----/src/utils/velodyne_utils.cpp: end-----" << std::endl;
+  // return FixKITTIDepth(depth_image);
+  return depth_image;
 }
 
 }  // namespace depth_clustering
