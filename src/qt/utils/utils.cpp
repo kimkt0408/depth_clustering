@@ -79,7 +79,9 @@ Cloud::Ptr CloudFromFile(const std::string &file_name,
     cloud->InitProjection(proj_params);
 #endif  // PCL_FOUND
   } else if (name.endsWith(".png") || name.endsWith(".exr")) {
+  std::cout << "-----/qt/utils/utils.cpp: start-----" << std::endl;
     cloud = Cloud::FromImage(MatFromDepthPng(file_name), proj_params);
+  std::cout << "-----/qt/utils/utils.cpp: end-----" << std::endl;
   } else if (name.endsWith(".txt")) {
     cloud = ReadKittiCloudTxt(file_name);
     cloud->InitProjection(proj_params);

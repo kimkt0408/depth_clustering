@@ -103,6 +103,8 @@ Cloud::Ptr ReadKittiCloud(const string& path) {
 
 cv::Mat FixKITTIDepth(const cv::Mat& original) {
   cv::Mat fixed = original;
+  
+  std::cout << "-----/src/utils/velodyne_utils.cpp/FixKITTIDepth: start-----" << std::endl;
   for (int r = 0; r < fixed.rows; ++r) {
     auto correction = MOOSMAN_CORRECTIONS[r];
     for (int c = 0; c < fixed.cols; ++c) {
@@ -112,13 +114,17 @@ cv::Mat FixKITTIDepth(const cv::Mat& original) {
       fixed.at<float>(r, c) -= correction;
     }
   }
+  std::cout << "-----/src/utils/velodyne_utils.cpp/FixKITTIDepth: end-----" << std::endl;
   return fixed;
 }
 
 cv::Mat MatFromDepthPng(const string& path) {
   // cv::Mat depth_image = cv::imread(path, CV_LOAD_IMAGE_ANYDEPTH);
+  std::cout << "-----/src/utils/velodyne_utils.cpp: start-----" << std::endl;
   cv::Mat depth_image = cv::imread(path, cv::IMREAD_ANYDEPTH); // For ROS Noetic
+  std::cout << "-----/src/utils/velodyne_utils.cpp: one-----" << std::endl;
   depth_image.convertTo(depth_image, CV_32F);
+  std::cout << "-----/src/utils/velodyne_utils.cpp: end-----" << std::endl;
   depth_image /= 500.;
   return FixKITTIDepth(depth_image);
 }

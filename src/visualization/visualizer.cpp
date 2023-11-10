@@ -87,12 +87,19 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
   glTranslatef(center.x(), center.y(), center.z());
   glScalef(scale.x(), scale.y(), scale.z());
   float volume = scale.x() * scale.y() * scale.z();
+  // if (volume < 30.0f && scale.x() < 6 && scale.y() < 6 && scale.z() < 6) {
+  //   glColor3f(0.0f, 0.2f, 0.9f);
+  //   glLineWidth(4.0f);
+  // } else {
+  //   glColor3f(0.3f, 0.3f, 0.3f);
+  //   glLineWidth(1.0f);
+  // }
   if (volume < 30.0f && scale.x() < 6 && scale.y() < 6 && scale.z() < 6) {
-    glColor3f(0.0f, 0.2f, 0.9f);
-    glLineWidth(4.0f);
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glLineWidth(2.0f);
   } else {
-    glColor3f(0.3f, 0.3f, 0.3f);
-    glLineWidth(1.0f);
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glLineWidth(2.0f);
   }
   glBegin(GL_LINE_STRIP);
 

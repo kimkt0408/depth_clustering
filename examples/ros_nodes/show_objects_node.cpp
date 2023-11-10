@@ -47,7 +47,7 @@ int main(int argc, char* argv[]) {
       ' ', "1.0");
   TCLAP::ValueArg<int> angle_arg(
       "", "angle",
-      "Threshold angle. Below this value, the objects are separated", false, 0,
+      "Threshold angle. Below this value, the objects are separated", false, 1,
       "int");
   TCLAP::ValueArg<int> num_beams_arg(
       "", "num_beams", "Num of vertical beams in laser. One of: [16, 32, 64].",
@@ -94,11 +94,11 @@ int main(int argc, char* argv[]) {
   // int min_cluster_size = 20;
   // int max_cluster_size = 100000;
 
-  int min_cluster_size = 1;
-  int max_cluster_size = 200;
+  int min_cluster_size = 10;
+  int max_cluster_size = 11;
 
-  int smooth_window_size = 7;
-  Radians ground_remove_angle = 7_deg;
+  int smooth_window_size = 5;
+  Radians ground_remove_angle = 9_deg;
 
   auto depth_ground_remover = DepthGroundRemover(
       *proj_params_ptr, ground_remove_angle, smooth_window_size);

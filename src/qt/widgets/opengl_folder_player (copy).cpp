@@ -100,8 +100,7 @@ OpenGlFolderPlayer::OpenGlFolderPlayer(QWidget *parent)
   // setup viewer
   _cloud.reset(new Cloud);
 
-  // _proj_params = ProjectionParams::HDL_64();
-  _proj_params = ProjectionParams::VLP_16();    // For P-AgBot dataset
+  _proj_params = ProjectionParams::HDL_64();
 
   ui->gfx_projection_view->setViewportUpdateMode(
       QGraphicsView::BoundingRectViewportUpdate);
@@ -242,28 +241,21 @@ void OpenGlFolderPlayer::onSegmentationParamUpdate() {
   } else {
     _scene_labels.reset();
   }
-  // std::cout << ui->sldr_navigate_clouds->value() << std::endl;
   this->onSliderMovedTo(ui->sldr_navigate_clouds->value());
 }
 
 void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   if (_file_names.empty()) {
-    std::cout << "!!!!!!!" << std::endl;
     return;
   }
-  
   fprintf(stderr, "slider moved to: %d\n", cloud_number);
   fprintf(stderr, "loading cloud from: %s\n",
-          _file_names[cloud_number-1].c_str());
+          _file_names[cloud_number].c_str());
   Timer timer;
-  std::cout << "**********" << std::endl;
-  const auto &file_name = _file_names[cloud_number-1];
-  std::cout << "**********" << std::endl;
+  const auto &file_name = _file_names[cloud_number];
   _cloud = CloudFromFile(file_name, *_proj_params);
-  std::cout << "**********" << std::endl;
   fprintf(stderr, "[TIMER]: load cloud in %lu microsecs\n",
           timer.measure(Timer::Units::Micro));
-  std::cout << "**********" << std::endl;
   _current_full_depth_image = _cloud->projection_ptr()->depth_image();
 
   ui->lbl_cloud_name->setText(QString::fromStdString(file_name));
@@ -307,10 +299,7 @@ void OpenGlFolderPlayer::onOpenFolderToRead() {
                             ui->cmb_extension->currentText().toStdString(),
                             order);
   _file_names = cloud_reader.GetAllFilePaths();
-  // std::cout << _file_names[0] << std::endl;
-  std::cout << "***" << _file_names[0] << std::endl;
   if (_file_names.empty()) {
-    std::cout << "^^^" << std::endl;
     return;
   }
 
@@ -323,10 +312,8 @@ void OpenGlFolderPlayer::onOpenFolderToRead() {
   ui->sldr_navigate_clouds->setEnabled(true);
   ui->spnbx_current_cloud->setEnabled(true);
 
-  std::cout << "&&&" << _file_names[0] << std::endl;
   // focus on the cloud
   _viewer->update();
-  std::cout << "@@@" << _file_names[0] << std::endl;
 }
 
 void OpenGlFolderPlayer::keyPressEvent(QKeyEvent *event) {

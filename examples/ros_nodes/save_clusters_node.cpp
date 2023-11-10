@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
   ros::init(argc, argv, "dynamics_processing");
   ros::NodeHandle nh;
 
-  string topic_clouds = "/velodyne_points";
+  string topic_clouds = "/ns1/velodyne_points";
 
   CloudOdomRosSubscriber subscriber(&nh, *proj_params_ptr, topic_clouds);
 
