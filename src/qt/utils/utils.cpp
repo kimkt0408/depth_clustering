@@ -42,23 +42,20 @@ QString appendPaths(const QString &path1, const QString &path2) {
 QImage MatToQImage(const cv::Mat &image) {
   auto qimage = QImage(image.cols, image.rows, QImage::Format_RGB888);
   if (image.type() == CV_32F) {
-    std::cout << "!!!!!!!!!!!!!!!!!" << std::endl;
     for (int r = 0; r < image.rows; ++r) {
       for (int c = 0; c < image.cols; ++c) {
-        std::cout << image.at<float>(r, c) << std::endl;
         if (image.at<float>(r, c) == 666) {
           auto color = qRgb(0, 200, 0);
           qimage.setPixel(c, r, color);
           continue;
         }
-        const float &val = image.at<float>(r, c) * 10000; // Original multiplier: 10 -> 10 is too small for the depth values in our dataset
+        const float &val = image.at<float>(r, c) * 1000; // default: 1000, Original multiplier: 10 -> 10 is too small for the depth values in our dataset
         auto color = qRgb(val, val, val);
 
         qimage.setPixel(c, r, color);
       }
     }
   } else {
-    std::cout << "?????????????????" << std::endl;
     for (int r = 0; r < image.rows; ++r) {
       for (int c = 0; c < image.cols; ++c) {
         auto val = image.at<cv::Vec3b>(r, c);
