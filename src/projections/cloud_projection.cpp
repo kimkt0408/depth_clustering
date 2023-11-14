@@ -77,7 +77,6 @@ void CloudProjection::CheckImageAndStorage(const cv::Mat& image) {
   }
 
   std::cout << "-----/src/projections/cloud_projection.cpp/CheckImageAndStorage: 2-----" << std::endl;
-  std::cout << this->rows() << " " << static_cast<size_t>(image.rows) << " " << this->cols() << " " << static_cast<size_t>(image.cols) << std::endl;
   if (this->rows() != static_cast<size_t>(image.rows) ||
       this->cols() != static_cast<size_t>(image.cols)) {
     throw std::length_error("_data dimentions do not correspond to image ones");
