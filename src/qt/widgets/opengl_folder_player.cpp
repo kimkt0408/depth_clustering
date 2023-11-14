@@ -251,7 +251,7 @@ void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   const auto now = std::chrono::steady_clock::now();
 
   // Only proceed if enough time has passed since the last call
-  if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_call).count() < 400) {
+  if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_call).count() < 400) { // ms, default: 400 (ms)
     return;
   }
 
