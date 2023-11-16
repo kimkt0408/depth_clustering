@@ -133,6 +133,7 @@ void OpenGlFolderPlayer::onPlayAllClouds() {
 void OpenGlFolderPlayer::OnNewObjectReceived(const cv::Mat &image, int) {
   QImage qimage;
   fprintf(stderr, "[INFO] Received Mat with type: %d\n", image.type());
+  std::cout << (image.type() == cv::DataType<float>::type) << std::endl;
   switch (image.type()) {
     case cv::DataType<float>::type: {
       // we have received a depth image
@@ -166,14 +167,14 @@ void OpenGlFolderPlayer::OnNewObjectReceived(const cv::Mat &image, int) {
         }
       }
       auto diff_helper_ptr =
-          DiffFactory::Build(diff_type, &image, _proj_params.get());
+          DiffFactory::Build(diff_type, &image, _proj_params.get());  // Display: Show angles
       qimage = MatToQImage(diff_helper_ptr->Visualize());
       break;
     }
     case cv::DataType<uint16_t>::type: {
       // we have received labels
       fprintf(stderr, "[INFO] received labels.\n");
-      qimage = MatToQImage(AbstractImageLabeler::LabelsToColor(image));
+      qimage = MatToQImage(AbstractImageLabeler::LabelsToColor(image));  // Display: Show segmentation
       break;
     }
     default: {
@@ -287,7 +288,8 @@ void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   fprintf(stderr, "[TIMER]: depth image set to gui in %lu microsecs\n",
           timer.measure(Timer::Units::Micro));
   if (ui->radio_show_angles->isChecked()) {
-    this->OnNewObjectReceived(_current_full_depth_image);
+    std::cout << "*****************" << std::endl;
+    this->OnNewObjectReceived(_current_full_depth_image);   // Display: Show angles
   }
   fprintf(stderr, "[TIMER]: angles shown in %lu microsecs\n",
           timer.measure(Timer::Units::Micro));
@@ -300,7 +302,7 @@ void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
           timer.measure(Timer::Units::Micro));
 
   // label cloud and show labels
-  _ground_rem->OnNewObjectReceived(*_cloud, 0);
+  _ground_rem->OnNewObjectReceived(*_cloud, 0);      // Display: Show segmentation
 
   fprintf(stderr, "[TIMER]: full segmentation took %lu milliseconds\n",
           timer.measure(Timer::Units::Milli));

@@ -148,7 +148,11 @@ cv::Mat AngleDiffPrecomputed::Visualize() const {
       auto col_angle = Radians::FromRadians(_beta_cols.at<float>(r, c));
       uint8_t row_color = 255 * (row_angle.ToDegrees() / max_angle_deg);
       uint8_t col_color = 255 * (col_angle.ToDegrees() / max_angle_deg);
-      cv::Vec3b color(255 - row_color, 255 - col_color, 0);
+
+      // r: 255 - row_color: More red = Less row angle difference
+      // g: 255 - col_color: More green = less col angle difference
+      // b: 0      
+      cv::Vec3b color(255 - row_color, 255 - col_color, 0);   // If black ((0, 0, 0)), large angle difference
       colors.at<cv::Vec3b>(r, c) = color;
     }
   }

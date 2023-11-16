@@ -41,7 +41,7 @@ QString appendPaths(const QString &path1, const QString &path2) {
 
 QImage MatToQImage(const cv::Mat &image) {
   auto qimage = QImage(image.cols, image.rows, QImage::Format_RGB888);
-  if (image.type() == CV_32F) {
+  if (image.type() == CV_32F) { // Visualization: Depth map
     for (int r = 0; r < image.rows; ++r) {
       for (int c = 0; c < image.cols; ++c) {
         if (image.at<float>(r, c) == 666) {
@@ -55,7 +55,7 @@ QImage MatToQImage(const cv::Mat &image) {
         qimage.setPixel(c, r, color);
       }
     }
-  } else {
+  } else {  // Visualization: Angle or Segmentation 
     for (int r = 0; r < image.rows; ++r) {
       for (int c = 0; c < image.cols; ++c) {
         auto val = image.at<cv::Vec3b>(r, c);
