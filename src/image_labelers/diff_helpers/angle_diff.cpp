@@ -141,18 +141,38 @@ cv::Mat AngleDiffPrecomputed::Visualize() const {
   float max_angle_deg = 90.0f;
   for (int r = 0; r < _beta_rows.rows; ++r) {
     for (int c = 0; c < _beta_rows.cols; ++c) {
-      if (_source_image->at<float>(r, c) < 0.01f) {
-        continue;
-      }
+
+      // To make the blind spot pixels as blue
+      // if (_source_image->at<float>(r, c) < 0.01f) {
+      //   continue;
+      // }
+
       auto row_angle = Radians::FromRadians(_beta_rows.at<float>(r, c));
       auto col_angle = Radians::FromRadians(_beta_cols.at<float>(r, c));
+
       uint8_t row_color = 255 * (row_angle.ToDegrees() / max_angle_deg);
       uint8_t col_color = 255 * (col_angle.ToDegrees() / max_angle_deg);
 
       // r: 255 - row_color: More red = Less row angle difference
       // g: 255 - col_color: More green = less col angle difference
       // b: 0      
-      cv::Vec3b color(255 - row_color, 255 - col_color, 0);   // If black ((0, 0, 0)), large angle difference
+      // If black ((0, 0, 0)), large angle difference
+      
+      cv::Vec3b color(255 - row_color, 255 - col_color, 0);   
+
+      // Visualize the blind spot pixels as Blue
+      if ((row_angle.ToDegrees() < 0.01f) && (col_angle.ToDegrees() < 0.01f)){
+        color(0) = 0;
+        color(1) = 0;
+        color(2) = 255;
+      }
+
+      // if ((row_color > 200) || (col_color > 200)){
+      //   color(0) = 0;
+      //   color(1) = 0;
+      //   color(2) = 0;
+      // }
+
       colors.at<cv::Vec3b>(r, c) = color;
     }
   }
@@ -186,7 +206,10 @@ void AngleDiffPrecomputed::PreComputeBetaAngles() {
   for (size_t r = 0; r < _params->rows(); ++r) {
     float angle_rows = _row_alphas[r];
     for (size_t c = 0; c < _params->cols(); ++c) {
-      if (_source_image->at<float>(r, c) < 0.001) {
+      if (_source_image->at<float>(r, c) < 0.001) { // Pixels from Blind spot
+        // std::cout << "BLIND SPOT: Row: " << _beta_rows.at<float>(r, c) << std::endl;
+        // _beta_rows.at<float>(r, c) = 1;
+        // _beta_cols.at<float>(r, c) = 1;
         continue;
       }
       float angle_cols = _col_alphas[c];
