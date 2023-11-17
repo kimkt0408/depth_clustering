@@ -138,9 +138,14 @@ class DepthGroundRemover : public AbstractClient<Cloud>,
   cv::Mat RepairDepth(const cv::Mat& depth_image);
 
   ProjectionParams _params;
-  int _window_size = 5;
+  // int _window_size = 5;
+  // Radians _ground_remove_angle = 5_deg;
+  // float _eps = 0.001f;
+
+  int _window_size = 3;
   Radians _ground_remove_angle = 5_deg;
   float _eps = 0.001f;
+
 
   mutable int _counter = 0;
 };
@@ -148,3 +153,4 @@ class DepthGroundRemover : public AbstractClient<Cloud>,
 }  // namespace depth_clustering
 
 #endif  // SRC_GROUND_REMOVAL_DEPTH_GROUND_REMOVER_H_
+ 

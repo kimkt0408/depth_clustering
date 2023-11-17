@@ -122,7 +122,7 @@ class AngleDiffPrecomputed : public AbstractDiff {
    */
 
   inline bool SatisfiesThreshold(float angle, float threshold) const override {
-    return angle > threshold;
+    return angle > threshold;   // Small angle = Scans from different objects
   }
 
   /**

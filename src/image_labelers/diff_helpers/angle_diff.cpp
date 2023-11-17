@@ -207,9 +207,6 @@ void AngleDiffPrecomputed::PreComputeBetaAngles() {
     float angle_rows = _row_alphas[r];
     for (size_t c = 0; c < _params->cols(); ++c) {
       if (_source_image->at<float>(r, c) < 0.001) { // Pixels from Blind spot
-        // std::cout << "BLIND SPOT: Row: " << _beta_rows.at<float>(r, c) << std::endl;
-        // _beta_rows.at<float>(r, c) = 1;
-        // _beta_cols.at<float>(r, c) = 1;
         continue;
       }
       float angle_cols = _col_alphas[c];

@@ -243,21 +243,10 @@ void OpenGlFolderPlayer::onSegmentationParamUpdate() {
   } else {
     _scene_labels.reset();
   }
-  // std::cout << ui->sldr_navigate_clouds->value() << std::endl;
   this->onSliderMovedTo(ui->sldr_navigate_clouds->value());
 }
 
 void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
-  // static std::chrono::steady_clock::time_point last_call = std::chrono::steady_clock::now();
-  // const auto now = std::chrono::steady_clock::now();
-
-  // // Only proceed if enough time has passed since the last call
-  // if (std::chrono::duration_cast<std::chrono::milliseconds>(now - last_call).count() < 400) { // ms, default: 400 (ms)
-  //   return;
-  // }
-
-  // last_call = now;
-
   if (_file_names.empty()) {
   std::cout << "-----/src/qt/widgets/opengl_folder_player.cpp/onSliderMovedTo: start-----" << std::endl;
     return;
