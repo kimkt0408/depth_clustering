@@ -55,6 +55,7 @@ class DepthGroundRemover : public AbstractClient<Cloud>,
         _params{params},
         _window_size{window_size},
         _ground_remove_angle{ground_remove_angle} {}
+
   virtual ~DepthGroundRemover() {}
 
   /**
