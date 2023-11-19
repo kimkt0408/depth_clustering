@@ -40,6 +40,19 @@
 #include "utils/rich_point.h"
 #include "utils/useful_typedefs.h"
 
+// pcl::PointCloud<pcl::PointXYZ>::Ptr ConvertToPointCloud
+#include <vector>
+#include <pcl/point_types.h>
+#include <pcl/point_cloud.h>
+
+// sensor_msgs::PointCloud2 ConvertToROSPointCloud2
+#include <ros/ros.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <pcl_ros/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
+ 
+
 namespace depth_clustering {
 
 /**
@@ -133,6 +146,10 @@ class CloudProjection {
    */
   void FixDepthSystematicErrorIfNeeded();
 
+  pcl::PointCloud<pcl::PointXYZ>::Ptr ConvertToPointCloud(
+    const cv::Mat& no_ground_image, const CloudProjection& projector);
+
+  sensor_msgs::PointCloud2 ConvertToROSPointCloud2(const pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_cloud);
  protected:
   // just stores addresses of the points. Does not own them.
   PointMatrix _data;

@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
-<package>
+<!-- <package> -->
+<package format="2">
   <name>depth_clustering</name>
   <version>1.1.0</version>
   <description>The depth_clustering package</description>
@@ -16,14 +17,34 @@
   <build_depend>message_filters</build_depend>
   <build_depend>tf</build_depend>
   <build_depend>eigen_conversions</build_depend>
+  <build_depend>pcl_ros</build_depend>
 
-  <run_depend>roscpp</run_depend>
+  <build_export_depend>roscpp</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
+  <build_export_depend>std_msgs</build_export_depend>
+  <build_export_depend>nav_msgs</build_export_depend>
+  <build_export_depend>message_filters</build_export_depend>
+  <build_export_depend>tf</build_export_depend>
+  <build_export_depend>eigen_conversions</build_export_depend>
+  <build_export_depend>pcl_ros</build_export_depend>
+
+  <!-- <run_depend>roscpp</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>std_msgs</run_depend>
   <run_depend>nav_msgs</run_depend>
   <run_depend>message_filters</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>eigen_conversions</run_depend>
+  <run_depend>pcl_ros</run_depend> -->
+
+  <exec_depend>roscpp</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>message_filters</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>eigen_conversions</exec_depend>
+  <exec_depend>pcl_ros</exec_depend>
 
   <test_depend>rosunit</test_depend>
 

@@ -110,4 +110,33 @@ const cv::Mat& CloudProjection::depth_image() const {
 
 cv::Mat& CloudProjection::depth_image() { return this->_depth_image; }
 
+pcl::PointCloud<pcl::PointXYZ>::Ptr CloudProjection::ConvertToPointCloud(
+    const cv::Mat& no_ground_image, const CloudProjection& projector) {
+  pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+  for (int r = 0; r < no_ground_image.rows; ++r) {
+    for (int c = 0; c < no_ground_image.cols; ++c) {
+      if (no_ground_image.at<float>(r, c) < 0.001f) {
+        // Skip invalid or negligible depth values
+        continue;
+      }
+      RichPoint point = projector.UnprojectPoint(no_ground_image, r, c);
+      cloud->push_back(pcl::PointXYZ(point.x(), point.y(), point.z()));
+    }
+  }
+
+  return cloud;
+}
+
+sensor_msgs::PointCloud2 CloudProjection::ConvertToROSPointCloud2(const pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_cloud) {
+    sensor_msgs::PointCloud2 ros_cloud;
+    // pcl::toROSMsg(*pcl_cloud, ros_cloud);
+    // ros_cloud.header.frame_id = "base_link";  // Set the frame ID
+    // ros_cloud.header.stamp = ros::Time::now();
+    // ros_cloud.header.stamp = ros::Time(0); // Represents time zero, often used as a default
+
+    return ros_cloud;
+}
+
+
 }  // namespace depth_clustering
