@@ -130,9 +130,9 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr CloudProjection::ConvertToPointCloud(
 
 sensor_msgs::PointCloud2 CloudProjection::ConvertToROSPointCloud2(const pcl::PointCloud<pcl::PointXYZ>::Ptr& pcl_cloud) {
     sensor_msgs::PointCloud2 ros_cloud;
-    // pcl::toROSMsg(*pcl_cloud, ros_cloud);
-    // ros_cloud.header.frame_id = "base_link";  // Set the frame ID
-    // ros_cloud.header.stamp = ros::Time::now();
+    pcl::toROSMsg(*pcl_cloud, ros_cloud);
+    ros_cloud.header.frame_id = "base_link";  // Set the frame ID
+    ros_cloud.header.stamp = ros::Time::now();
     // ros_cloud.header.stamp = ros::Time(0); // Represents time zero, often used as a default
 
     return ros_cloud;
