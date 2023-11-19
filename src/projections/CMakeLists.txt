@@ -24,4 +24,4 @@ add_library(projections SHARED
             ring_projection.cpp
             spherical_projection.cpp)
 
-target_link_libraries(projections ${OpenCV_LIBS})
+target_link_libraries(projections ${OpenCV_LIBS} ${catkin_LIBRARIES})

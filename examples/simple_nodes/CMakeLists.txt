@@ -31,7 +31,8 @@ target_link_libraries(show_objects_kitti
                       ${MY_QT_LIBRARIES}
                       ${Boost_LIBRARIES}
                       ${PCL_LIBRARIES}
-                      ${CMAKE_THREAD_LIBS_INIT})
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${catkin_LIBRARIES})
 
 add_executable(show_objects_moosmann show_objects_moosmann.cpp)
 target_link_libraries(show_objects_moosmann
@@ -47,4 +48,5 @@ target_link_libraries(show_objects_moosmann
                       ${Boost_LIBRARIES}
                       ${PCL_LIBRARIES}
                       ${OpenCV_LIBS}
-                      ${CMAKE_THREAD_LIBS_INIT})
+                      ${CMAKE_THREAD_LIBS_INIT}
+                      ${catkin_LIBRARIES})

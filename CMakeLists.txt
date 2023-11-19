@@ -122,7 +122,18 @@ find_package(catkin COMPONENTS
   message_filters
   tf
   eigen_conversions
+  pcl_ros  # Add this line
 )
+
+add_library(cloud_projection_node
+  src/projections/cloud_projection.cpp
+  # ... other source files ...
+)
+target_link_libraries(cloud_projection_node
+  ${catkin_LIBRARIES}
+  # ... other libraries ...
+)
+
 
 # add some useful constants to configuration
 configure_file(config/cmake_config.h.in

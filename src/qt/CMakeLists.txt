@@ -27,4 +27,6 @@ add_subdirectory(widgets)
 
 add_executable(qt_gui_app main.cpp)
 target_link_libraries(qt_gui_app
-                      qt_widgets)
+                      qt_widgets
+                      ${catkin_LIBRARIES}
+                      )

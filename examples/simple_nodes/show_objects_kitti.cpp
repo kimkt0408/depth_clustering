@@ -40,6 +40,13 @@
 
 #include "tclap/CmdLine.h"
 
+
+// sensor_msgs::PointCloud2 ConvertToROSPointCloud2
+#include <ros/ros.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <pcl_ros/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl_conversions/pcl_conversions.h>
 using std::string;
 
 using namespace depth_clustering;
