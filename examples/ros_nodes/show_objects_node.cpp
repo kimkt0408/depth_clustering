@@ -43,12 +43,22 @@ using ClustererT = ImageBasedClusterer<LinearImageLabeler<>>;
 
 
 int main(int argc, char* argv[]) {
+  // Default
+  // int min_cluster_size = 20;
+  // int max_cluster_size = 100000;
+
+  int min_cluster_size = 50;
+  int max_cluster_size = 10000;
+
+  int smooth_window_size = 5;
+  Radians ground_remove_angle = 9_deg;
+
   TCLAP::CmdLine cmd(
       "Subscribe to /velodyne_points topic and show clustering on the data.",
       ' ', "1.0");
   TCLAP::ValueArg<int> angle_arg(
       "", "angle",
-      "Threshold angle. Below this value, the objects are separated", false, 1,
+      "Threshold angle. Below this value, the objects are separated", false, 10,
       "int");
   TCLAP::ValueArg<int> num_beams_arg(
       "", "num_beams", "Num of vertical beams in laser. One of: [16, 32, 64].",
@@ -90,16 +100,6 @@ int main(int argc, char* argv[]) {
   CloudOdomRosSubscriber subscriber(&nh, *proj_params_ptr, topic_clouds);
   Visualizer visualizer;
   visualizer.show();
-
-  // Default
-  // int min_cluster_size = 20;
-  // int max_cluster_size = 100000;
-
-  int min_cluster_size = 10;
-  int max_cluster_size = 10000;
-
-  int smooth_window_size = 5;
-  Radians ground_remove_angle = 9_deg;
 
   auto depth_ground_remover = DepthGroundRemover(
       *proj_params_ptr, ground_remove_angle, smooth_window_size);

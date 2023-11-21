@@ -94,9 +94,11 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
   //   glColor3f(0.3f, 0.3f, 0.3f);
   //   glLineWidth(1.0f);
   // }
-  if (volume < 10.0f && scale.x() < 0.2 && scale.y() < 0.2 && scale.z() < 10) {
+  // if (volume < 2.0f && scale.x() < 0.2 && scale.y() < 0.2 && scale.z() < 10) {
+  if (volume > 0.002f && scale.x() < 0.2 && scale.y() < 0.2 && scale.z() < 10) {
     glColor3f(0.0f, 0.0f, 1.0f);
     glLineWidth(2.0f);
+    std::cout << volume << std::endl;
   } else {
     glColor3f(0.3f, 0.3f, 0.3f);
     glLineWidth(0.02f);
