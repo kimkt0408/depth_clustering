@@ -133,7 +133,6 @@ void OpenGlFolderPlayer::onPlayAllClouds() {
 void OpenGlFolderPlayer::OnNewObjectReceived(const cv::Mat &image, int) {
   QImage qimage;
   fprintf(stderr, "[INFO] Received Mat with type: %d\n", image.type());
-  std::cout << (image.type() == cv::DataType<float>::type) << std::endl;
   switch (image.type()) {
     case cv::DataType<float>::type: {
       // we have received a depth image
@@ -277,7 +276,6 @@ void OpenGlFolderPlayer::onSliderMovedTo(int cloud_number) {
   fprintf(stderr, "[TIMER]: depth image set to gui in %lu microsecs\n",
           timer.measure(Timer::Units::Micro));
   if (ui->radio_show_angles->isChecked()) {
-    std::cout << "*****************" << std::endl;
     this->OnNewObjectReceived(_current_full_depth_image);   // Display: Show angles
   }
   fprintf(stderr, "[TIMER]: angles shown in %lu microsecs\n",
