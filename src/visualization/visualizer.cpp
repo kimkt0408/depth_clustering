@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 
+#include <cstdlib>  // For rand() and srand()
+
 namespace depth_clustering {
 
 using std::array;
@@ -97,44 +99,55 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
   // if (volume < 2.0f && scale.x() < 0.2 && scale.y() < 0.2 && scale.z() < 10) {
   // if (volume > 0.002f && scale.x() < 0.3 && scale.y() < 0.3 && scale.z() < 4) {
   if (volume > 0.002f && scale.x() < 0.3 && scale.y() < 0.3 && scale.z() < 4 && scale.z() > 0.2) {
-    glColor3f(0.0f, 0.0f, 1.0f);
-    glLineWidth(2.0f);
+    // Generate random color components
+    // float red = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    // float green = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    // float blue = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+    // // Set the random color
+    // glColor3f(red, green, blue);
+    
+    glColor3f(1.0f, 1.0f, 0.0f);
+    glLineWidth(8.0f);
   } else {
     glColor3f(0.3f, 0.3f, 0.3f);
     glLineWidth(0.02f);
   }
-  glBegin(GL_LINE_STRIP);
+  // glBegin(GL_LINE_STRIP);
 
-  // Bottom of Box
-  glVertex3f(-0.5, -0.5, -0.5);
-  glVertex3f(-0.5, -0.5, 0.5);
-  glVertex3f(0.5, -0.5, 0.5);
-  glVertex3f(0.5, -0.5, -0.5);
-  glVertex3f(-0.5, -0.5, -0.5);
+  // // Bottom of Box
+  // glVertex3f(-0.5, -0.5, -0.5);
+  // glVertex3f(-0.5, -0.5, 0.5);
+  // glVertex3f(0.5, -0.5, 0.5);
+  // glVertex3f(0.5, -0.5, -0.5);
+  // glVertex3f(-0.5, -0.5, -0.5);
 
-  // Top of Box
-  glVertex3f(-0.5, 0.5, -0.5);
-  glVertex3f(-0.5, 0.5, 0.5);
-  glVertex3f(0.5, 0.5, 0.5);
-  glVertex3f(0.5, 0.5, -0.5);
-  glVertex3f(-0.5, 0.5, -0.5);
+  // // Top of Box
+  // glVertex3f(-0.5, 0.5, -0.5);
+  // glVertex3f(-0.5, 0.5, 0.5);
+  // glVertex3f(0.5, 0.5, 0.5);
+  // glVertex3f(0.5, 0.5, -0.5);
+  // glVertex3f(-0.5, 0.5, -0.5);
 
-  glEnd();
+  // glEnd();
 
   glBegin(GL_LINES);
   // For the Sides of the Box
 
-  glVertex3f(-0.5, 0.5, -0.5);
-  glVertex3f(-0.5, -0.5, -0.5);
+  glVertex3f(0.0, 0.0, 0.5);
+  glVertex3f(0.0, 0.0, -0.5);
 
-  glVertex3f(-0.5, -0.5, 0.5);
-  glVertex3f(-0.5, 0.5, 0.5);
+  // glVertex3f(-0.5, 0.5, -0.5);
+  // glVertex3f(-0.5, -0.5, -0.5);
 
-  glVertex3f(0.5, -0.5, 0.5);
-  glVertex3f(0.5, 0.5, 0.5);
+  // glVertex3f(-0.5, -0.5, 0.5);
+  // glVertex3f(-0.5, 0.5, 0.5);
 
-  glVertex3f(0.5, -0.5, -0.5);
-  glVertex3f(0.5, 0.5, -0.5);
+  // glVertex3f(0.5, -0.5, 0.5);
+  // glVertex3f(0.5, 0.5, 0.5);
+
+  // glVertex3f(0.5, -0.5, -0.5);
+  // glVertex3f(0.5, 0.5, -0.5);
 
   glEnd();
   glPopMatrix();

@@ -58,8 +58,8 @@ int main(int argc, char* argv[]) {
       ' ', "1.0");
   TCLAP::ValueArg<int> angle_arg(
       "", "angle",
-      "Threshold angle. Below this value, the objects are separated", false, 25,
-      "int"); // Default: 10
+      "Threshold angle. Below this value, the objects are separated", false, 30,
+      "int"); // Default: 25
   TCLAP::ValueArg<int> num_beams_arg(
       "", "num_beams", "Num of vertical beams in laser. One of: [16, 32, 64].",
       false, 16, "int");
