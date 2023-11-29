@@ -65,6 +65,7 @@
         "variant": "cpp",
         "bit": "cpp",
         "*.ipp": "cpp",
-        "queue": "cpp"
+        "queue": "cpp",
+        "core": "cpp"
     }
 }

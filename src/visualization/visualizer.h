@@ -18,6 +18,13 @@
 #include "utils/cloud.h"
 #include "utils/useful_typedefs.h"
 
+#include <ros/ros.h>
+#include <visualization_msgs/MarkerArray.h>
+#include <sensor_msgs/PointCloud2.h>
+#include <pcl_ros/point_cloud.h>
+#include <pcl/point_types.h>
+#include <unordered_map>
+
 namespace depth_clustering {
 
 class IUpdateListener {
@@ -54,7 +61,8 @@ class Visualizer : public QGLViewer,
                    public AbstractClient<Cloud>,
                    public IUpdateListener {
  public:
-  explicit Visualizer(QWidget* parent = 0);
+  // explicit Visualizer(QWidget* parent = 0);
+  explicit Visualizer(QWidget* parent = 0, ros::NodeHandle* nh = nullptr);  // For ROS integration
   virtual ~Visualizer();
 
   void OnNewObjectReceived(const Cloud& cloud, const int id) override;
@@ -68,8 +76,12 @@ class Visualizer : public QGLViewer,
   void init() override;
 
  private:
+  ros::NodeHandle* _nh;
+  ros::Publisher object_segments_pub;
+  
   void DrawCloud(const Cloud& cloud);
   void DrawCube(const Eigen::Vector3f& center, const Eigen::Vector3f& scale);
+  void PublishObjectSegments(); 
 
   bool _updated;
   ObjectPtrStorer _cloud_obj_storer;

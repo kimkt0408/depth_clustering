@@ -28,16 +28,30 @@ using std::thread;
 using std::unordered_map;
 using std::vector;
 
-static vector<array<int, 3>> COLORS;
+// static vector<array<int, 3>> COLORS;
 
-Visualizer::Visualizer(QWidget* parent)
-    : QGLViewer(parent), AbstractClient<Cloud>(), _updated{false} {
+// Visualizer::Visualizer(QWidget* parent)
+//     : QGLViewer(parent), AbstractClient<Cloud>(), _updated{false} {
+//   _cloud_obj_storer.SetUpdateListener(this);
+// }
+
+Visualizer::Visualizer(QWidget* parent, ros::NodeHandle* nh)
+    : QGLViewer(parent), AbstractClient<Cloud>(), _nh(nh) {
   _cloud_obj_storer.SetUpdateListener(this);
+
+  if (_nh) {
+  object_segments_pub = _nh->advertise<visualization_msgs::MarkerArray>("/depth_clustering/object_segments", 1);
+  } else {
+    std::cout << "Error: NodeHandle is null in Visualizer constructor." << std::endl;
+  }
 }
 
 void Visualizer::draw() {
   lock_guard<mutex> guard(_cloud_mutex);
   DrawCloud(_cloud);
+  std::cout << "!!!!!!!!!!" << std::endl;
+  PublishObjectSegments();
+  std::cout << "??????????" << std::endl;
   for (const auto& kv : _cloud_obj_storer.object_clouds()) {
     const auto& cluster = kv.second;
     Eigen::Vector3f center = Eigen::Vector3f::Zero();
@@ -222,5 +236,47 @@ void ObjectPtrStorer::OnNewObjectReceived(
     _update_listener->onUpdate();
   }
 }
+
+// In Visualizer.cpp
+
+void Visualizer::PublishObjectSegments() {
+  visualization_msgs::MarkerArray marker_array;
+  int id = 0;
+
+  for (const auto& kv : _cloud_obj_storer.object_clouds()) {
+    const auto& cluster = kv.second;
+
+    visualization_msgs::Marker marker;
+    marker.header.frame_id = "velodyne1";  // Adjust as needed
+    marker.header.stamp = ros::Time::now();
+    marker.ns = "object_segments_markers";
+    marker.id = id++;
+    marker.type = visualization_msgs::Marker::POINTS;
+    marker.action = visualization_msgs::Marker::ADD;
+    marker.scale.x = 0.05;  // Size of points, adjust as needed
+    marker.scale.y = 0.05;  // Size of points, adjust as needed
+    marker.color.a = 1.0;  // Alpha
+    marker.color.r = 1.0;  // Red
+    marker.color.g = 0.0;  // Green
+    marker.color.b = 0.0;  // Blue
+
+    for (const auto& point : cluster.points()) {
+      geometry_msgs::Point ros_point;
+      ros_point.x = point.x();
+      ros_point.y = point.y();
+      ros_point.z = point.z();
+      marker.points.push_back(ros_point);
+    }
+
+    marker_array.markers.push_back(marker);
+  }
+
+  std::cout << "******" << std::endl;
+  if (_nh) {
+    std::cout << "######" << std::endl;
+    object_segments_pub.publish(marker_array);
+  }
+}
+
 
 }  // namespace depth_clustering

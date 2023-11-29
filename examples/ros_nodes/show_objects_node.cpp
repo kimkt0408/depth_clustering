@@ -98,7 +98,9 @@ int main(int argc, char* argv[]) {
   string topic_clouds = "/ns1/velodyne_points";
 
   CloudOdomRosSubscriber subscriber(&nh, *proj_params_ptr, topic_clouds);
-  Visualizer visualizer;
+  // Assuming Visualizer is created and used here
+  Visualizer visualizer(nullptr, &nh);
+  // Visualizer visualizer;
   visualizer.show();
 
   auto depth_ground_remover = DepthGroundRemover(
