@@ -77,15 +77,15 @@ void Visualizer::draw() {
     if (min_point.x() < max_point.x()) {
       extent = max_point - min_point;
     }
-    DrawCube(center, extent);
 
     float volume = extent.x() * extent.y() * extent.z();
     
-    if (volume > 0.002f && extent.x() < 0.3 && extent.y() < 0.3 && extent.z() < 4 && extent.z() > 0.3) {
+    if (volume > 0.002f && extent.x() < 0.3 && extent.y() < 0.3 && extent.z() < 4 && extent.z() > 0.3) {    
+      DrawCube(center, extent);
       PublishObjectSegments(kv, id);
     }
-    
   }
+  ros::Duration(0.1).sleep();  // Small delay to separate the publishing of each cluster
 }
 
 void Visualizer::init() {
@@ -111,18 +111,9 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
   glPushMatrix();
   glTranslatef(center.x(), center.y(), center.z());
   glScalef(scale.x(), scale.y(), scale.z());
-  float volume = scale.x() * scale.y() * scale.z();
-  // if (volume < 30.0f && scale.x() < 6 && scale.y() < 6 && scale.z() < 6) {
-  //   glColor3f(0.0f, 0.2f, 0.9f);
-  //   glLineWidth(4.0f);
-  // } else {
-  //   glColor3f(0.3f, 0.3f, 0.3f);
-  //   glLineWidth(1.0f);
-  // }
-  // if (volume < 2.0f && scale.x() < 0.2 && scale.y() < 0.2 && scale.z() < 10) {
-  // if (volume > 0.002f && scale.x() < 0.3 && scale.y() < 0.3 && scale.z() < 4) {
-  if (volume > 0.002f && scale.x() < 0.3 && scale.y() < 0.3 && scale.z() < 4 && scale.z() > 0.3) {
-    glColor3f(0.0f, 0.0f, 1.0f);
+  // float volume = scale.x() * scale.y() * scale.z();
+  
+  glColor3f(0.0f, 0.0f, 1.0f);
     glLineWidth(2.0f);
 
     glBegin(GL_LINE_STRIP);
@@ -171,11 +162,61 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
 
     glEnd();
 
+  // if (volume > 0.002f && scale.x() < 0.3 && scale.y() < 0.3 && scale.z() < 4 && scale.z() > 0.3) {
+  //   glColor3f(0.0f, 0.0f, 1.0f);
+  //   glLineWidth(2.0f);
+
+  //   glBegin(GL_LINE_STRIP);
+
+  //   // Bottom of Box
+  //   glVertex3f(-0.5, -0.5, -0.5);
+  //   glVertex3f(-0.5, -0.5, 0.5);
+  //   glVertex3f(0.5, -0.5, 0.5);
+  //   glVertex3f(0.5, -0.5, -0.5);
+  //   glVertex3f(-0.5, -0.5, -0.5);
+
+  //   // Top of Box
+  //   glVertex3f(-0.5, 0.5, -0.5);
+  //   glVertex3f(-0.5, 0.5, 0.5);
+  //   glVertex3f(0.5, 0.5, 0.5);
+  //   glVertex3f(0.5, 0.5, -0.5);
+  //   glVertex3f(-0.5, 0.5, -0.5);
+
+  //   glEnd();
+
+  //   glBegin(GL_LINES);
+  //   // For the Sides of the Box
+
+  //   glVertex3f(-0.5, 0.5, -0.5);
+  //   glVertex3f(-0.5, -0.5, -0.5);
+
+  //   glVertex3f(-0.5, -0.5, 0.5);
+  //   glVertex3f(-0.5, 0.5, 0.5);
+
+  //   glVertex3f(0.5, -0.5, 0.5);
+  //   glVertex3f(0.5, 0.5, 0.5);
+
+  //   glVertex3f(0.5, -0.5, -0.5);
+  //   glVertex3f(0.5, 0.5, -0.5);
+
+  //   glEnd();
+
+  //   glColor3f(1.0f, 1.0f, 0.0f);
+  //   glLineWidth(8.0f);
+
+  //   glBegin(GL_LINES);
+  //   // For the Sides of the Box
+
+  //   glVertex3f(0.0, 0.0, 0.5);
+  //   glVertex3f(0.0, 0.0, -0.5);
+
+  //   glEnd();
+
     
-  } else {
-    glColor3f(0.3f, 0.3f, 0.3f);
-    glLineWidth(0.02f);
-  }
+  // } else {
+  //   glColor3f(0.3f, 0.3f, 0.3f);
+  //   glLineWidth(0.02f);
+  // }
 
   // glBegin(GL_LINES);
   // // For the Sides of the Box
@@ -256,8 +297,9 @@ void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int&
   const auto& cluster = kv.second;
 
   visualization_msgs::Marker marker;
-  marker.header.frame_id = "velodyne1";  // Adjust as needed
-  marker.header.stamp = ros::Time::now();
+  marker.header.frame_id = "velodyne1_";  // Adjust as needed
+  marker.header.stamp = ros::Time(0);
+  // marker.header.stamp = ros::Time::now();
   marker.ns = "object_segments_markers";
   marker.id = id++;
   marker.type = visualization_msgs::Marker::POINTS;
@@ -271,10 +313,6 @@ void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int&
   marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
   marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
   marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-
-  // marker.color.r = 1.0;  // Red
-  // marker.color.g = 0.0;  // Green
-  // marker.color.b = 0.0;  // Blue
 
   for (const auto& point : cluster.points()) {
     geometry_msgs::Point ros_point;

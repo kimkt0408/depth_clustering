@@ -1,6 +1,7 @@
 <launch>
     <!-- Play rosbag files -->
-    <include file="$(find robot_setup_tf)/launch/rosbag_play_slam.launch" />
+    <!-- <include file="$(find robot_setup_tf)/launch/rosbag_play_slam.launch" /> -->
+    <include file="$(find gtsam_test)/launch/factorGraph.launch" />
 
     <!-- Run the show_objects_node using the wrapper script -->
     <!-- <node pkg="depth_clustering" type="save_clusters_node.sh" name="save_clusters_node" output="screen"/> -->
