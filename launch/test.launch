@@ -5,4 +5,8 @@
     <!-- Run the show_objects_node using the wrapper script -->
     <!-- <node pkg="depth_clustering" type="save_clusters_node.sh" name="save_clusters_node" output="screen"/> -->
     <node pkg="depth_clustering" type="show_objects_node.sh" name="show_objects_node" output="screen"/>
+
+    <!-- Rviz visualization -->
+    <arg name="rviz"   value="/home/kimkt0408/rviz/depth_clustering.rviz" /> 
+    <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz)" />
 </launch>

@@ -44,14 +44,16 @@ Visualizer::Visualizer(QWidget* parent, ros::NodeHandle* nh)
   } else {
     std::cout << "Error: NodeHandle is null in Visualizer constructor." << std::endl;
   }
+
+  srand(static_cast<unsigned int>(time(nullptr))); // Seed the random number generator
 }
 
 void Visualizer::draw() {
   lock_guard<mutex> guard(_cloud_mutex);
   DrawCloud(_cloud);
-  std::cout << "!!!!!!!!!!" << std::endl;
-  PublishObjectSegments();
-  std::cout << "??????????" << std::endl;
+  
+  int id = 0; // Initialize marker ID
+
   for (const auto& kv : _cloud_obj_storer.object_clouds()) {
     const auto& cluster = kv.second;
     Eigen::Vector3f center = Eigen::Vector3f::Zero();
@@ -76,6 +78,13 @@ void Visualizer::draw() {
       extent = max_point - min_point;
     }
     DrawCube(center, extent);
+
+    float volume = extent.x() * extent.y() * extent.z();
+    
+    if (volume > 0.002f && extent.x() < 0.3 && extent.y() < 0.3 && extent.z() < 4 && extent.z() > 0.3) {
+      PublishObjectSegments(kv, id);
+    }
+    
   }
 }
 
@@ -239,41 +248,46 @@ void ObjectPtrStorer::OnNewObjectReceived(
 
 // In Visualizer.cpp
 
-void Visualizer::PublishObjectSegments() {
+void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) {
   visualization_msgs::MarkerArray marker_array;
-  int id = 0;
+  // int id = 0;
 
-  for (const auto& kv : _cloud_obj_storer.object_clouds()) {
-    const auto& cluster = kv.second;
+  // for (const auto& kv : _cloud_obj_storer.object_clouds()) {
+  const auto& cluster = kv.second;
 
-    visualization_msgs::Marker marker;
-    marker.header.frame_id = "velodyne1";  // Adjust as needed
-    marker.header.stamp = ros::Time::now();
-    marker.ns = "object_segments_markers";
-    marker.id = id++;
-    marker.type = visualization_msgs::Marker::POINTS;
-    marker.action = visualization_msgs::Marker::ADD;
-    marker.scale.x = 0.05;  // Size of points, adjust as needed
-    marker.scale.y = 0.05;  // Size of points, adjust as needed
-    marker.color.a = 1.0;  // Alpha
-    marker.color.r = 1.0;  // Red
-    marker.color.g = 0.0;  // Green
-    marker.color.b = 0.0;  // Blue
+  visualization_msgs::Marker marker;
+  marker.header.frame_id = "velodyne1";  // Adjust as needed
+  marker.header.stamp = ros::Time::now();
+  marker.ns = "object_segments_markers";
+  marker.id = id++;
+  marker.type = visualization_msgs::Marker::POINTS;
+  marker.action = visualization_msgs::Marker::ADD;
+  marker.scale.x = 0.01;  // Size of points, adjust as needed
+  marker.scale.y = 0.01;  // Size of points, adjust as needed
+  marker.scale.z = 0.01;  // Size of points, adjust as needed
+  marker.color.a = 1.0;  // Alpha
 
-    for (const auto& point : cluster.points()) {
-      geometry_msgs::Point ros_point;
-      ros_point.x = point.x();
-      ros_point.y = point.y();
-      ros_point.z = point.z();
-      marker.points.push_back(ros_point);
-    }
+  // Assign a random color
+  marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+  marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+  marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 
-    marker_array.markers.push_back(marker);
+  // marker.color.r = 1.0;  // Red
+  // marker.color.g = 0.0;  // Green
+  // marker.color.b = 0.0;  // Blue
+
+  for (const auto& point : cluster.points()) {
+    geometry_msgs::Point ros_point;
+    ros_point.x = point.x();
+    ros_point.y = point.y();
+    ros_point.z = point.z();
+    marker.points.push_back(ros_point);
   }
 
-  std::cout << "******" << std::endl;
+  marker_array.markers.push_back(marker);
+  // }
+
   if (_nh) {
-    std::cout << "######" << std::endl;
     object_segments_pub.publish(marker_array);
   }
 }

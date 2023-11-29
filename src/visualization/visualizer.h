@@ -25,6 +25,9 @@
 #include <pcl/point_types.h>
 #include <unordered_map>
 
+#include <cstdlib> // For rand() and srand()
+#include <ctime>   // For time(), to seed the random number generator
+
 namespace depth_clustering {
 
 class IUpdateListener {
@@ -81,7 +84,7 @@ class Visualizer : public QGLViewer,
   
   void DrawCloud(const Cloud& cloud);
   void DrawCube(const Eigen::Vector3f& center, const Eigen::Vector3f& scale);
-  void PublishObjectSegments(); 
+  void PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id); 
 
   bool _updated;
   ObjectPtrStorer _cloud_obj_storer;
