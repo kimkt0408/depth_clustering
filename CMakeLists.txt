@@ -134,6 +134,17 @@ target_link_libraries(cloud_projection_node
   # ... other libraries ...
 )
 
+add_message_files(
+  FILES
+  PointCloudArray.msg
+)
+
+generate_messages(
+  DEPENDENCIES
+  sensor_msgs
+  std_msgs
+)
+
 
 # add some useful constants to configuration
 configure_file(config/cmake_config.h.in
