@@ -85,7 +85,8 @@ void Visualizer::draw() {
       PublishObjectSegments(kv, id);
     }
   }
-  ros::Duration(0.1).sleep();  // Small delay to separate the publishing of each cluster
+  // ros::Duration(0.1).sleep();  // Small delay to separate the publishing of each cluster
+  
 }
 
 void Visualizer::init() {
@@ -287,48 +288,133 @@ void ObjectPtrStorer::OnNewObjectReceived(
   }
 }
 
-// In Visualizer.cpp
+// void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) 
+// {
+//   visualization_msgs::MarkerArray marker_array;
+
+//   const auto& cluster = kv.second;
+
+//   visualization_msgs::Marker marker;
+//   marker.header.frame_id = "velodyne1_";  // Adjust as needed
+//   marker.header.stamp = ros::Time::now();
+//   marker.ns = "object_segments_markers";
+//   marker.id = id++;
+//   marker.type = visualization_msgs::Marker::POINTS;
+//   marker.action = visualization_msgs::Marker::ADD;
+//   marker.scale.x = 0.01;  // Size of points
+//   marker.scale.y = 0.01;
+//   marker.scale.z = 0.01;
+//   marker.color.a = 1.0;  // Alpha
+
+//   // Assign a random color
+//   marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+//   marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+//   marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+//   marker.lifetime = ros::Duration(1.0);  // Lifetime of the marker (3 seconds)
+
+//   for (const auto& point : cluster.points()) {
+//       geometry_msgs::Point ros_point;
+//       ros_point.x = point.x();
+//       ros_point.y = point.y();
+//       ros_point.z = point.z();
+//       marker.points.push_back(ros_point);
+//   }
+
+//   marker_array.markers.push_back(marker);
+
+//   if (_nh) {
+//       object_segments_pub.publish(marker_array);
+//   }
+// }
 
 void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) {
-  visualization_msgs::MarkerArray marker_array;
-  // int id = 0;
+    visualization_msgs::MarkerArray marker_array;
 
-  // for (const auto& kv : _cloud_obj_storer.object_clouds()) {
-  const auto& cluster = kv.second;
-
-  visualization_msgs::Marker marker;
-  marker.header.frame_id = "velodyne1_";  // Adjust as needed
-  marker.header.stamp = ros::Time(0);
-  // marker.header.stamp = ros::Time::now();
-  marker.ns = "object_segments_markers";
-  marker.id = id++;
-  marker.type = visualization_msgs::Marker::POINTS;
-  marker.action = visualization_msgs::Marker::ADD;
-  marker.scale.x = 0.01;  // Size of points, adjust as needed
-  marker.scale.y = 0.01;  // Size of points, adjust as needed
-  marker.scale.z = 0.01;  // Size of points, adjust as needed
-  marker.color.a = 1.0;  // Alpha
-
-  // Assign a random color
-  marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-  marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-
-  for (const auto& point : cluster.points()) {
-    geometry_msgs::Point ros_point;
-    ros_point.x = point.x();
-    ros_point.y = point.y();
-    ros_point.z = point.z();
-    marker.points.push_back(ros_point);
-  }
-
-  marker_array.markers.push_back(marker);
-  // }
-
-  if (_nh) {
+    // Clear previous markers
+    visualization_msgs::Marker clear_marker;
+    clear_marker.action = visualization_msgs::Marker::DELETEALL;
+    marker_array.markers.push_back(clear_marker);
     object_segments_pub.publish(marker_array);
-  }
+
+    marker_array.markers.clear();  // Clear the array for new markers
+
+    const auto& cluster = kv.second;
+
+    visualization_msgs::Marker marker;
+    marker.header.frame_id = "velodyne1_";  // Adjust as needed
+    marker.header.stamp = ros::Time::now();
+    marker.ns = "object_segments_markers";
+    marker.id = id++;
+    marker.type = visualization_msgs::Marker::POINTS;
+    marker.action = visualization_msgs::Marker::ADD;
+    marker.scale.x = 0.01;  // Size of points
+    marker.scale.y = 0.01;
+    marker.scale.z = 0.01;
+    marker.color.a = 1.0;  // Alpha
+
+    // Assign a random color
+    marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+    marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+    marker.lifetime = ros::Duration(1.5);  // Lifetime of the marker
+
+    for (const auto& point : cluster.points()) {
+        geometry_msgs::Point ros_point;
+        ros_point.x = point.x();
+        ros_point.y = point.y();
+        ros_point.z = point.z();
+        marker.points.push_back(ros_point);
+    }
+
+    marker_array.markers.push_back(marker);
+
+    if (_nh) {
+        object_segments_pub.publish(marker_array);
+    }
 }
+
+// void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) {
+//   visualization_msgs::MarkerArray marker_array;
+//   // int id = 0;
+
+//   // for (const auto& kv : _cloud_obj_storer.object_clouds()) {
+//   const auto& cluster = kv.second;
+
+//   visualization_msgs::Marker marker;
+//   marker.header.frame_id = "velodyne1_";  // Adjust as needed
+//   marker.header.stamp = ros::Time(0);
+//   // marker.header.stamp = ros::Time::now();
+//   marker.ns = "object_segments_markers";
+//   marker.id = id++;
+//   marker.type = visualization_msgs::Marker::POINTS;
+//   marker.action = visualization_msgs::Marker::ADD;
+//   marker.scale.x = 0.01;  // Size of points, adjust as needed
+//   marker.scale.y = 0.01;  // Size of points, adjust as needed
+//   marker.scale.z = 0.01;  // Size of points, adjust as needed
+//   marker.color.a = 1.0;  // Alpha
+
+//   // Assign a random color
+//   marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+//   marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+//   marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
+
+//   for (const auto& point : cluster.points()) {
+//     geometry_msgs::Point ros_point;
+//     ros_point.x = point.x();
+//     ros_point.y = point.y();
+//     ros_point.z = point.z();
+//     marker.points.push_back(ros_point);
+//   }
+
+//   marker_array.markers.push_back(marker);
+//   // }
+
+//   if (_nh) {
+//     object_segments_pub.publish(marker_array);
+//   }
+// }
 
 
 }  // namespace depth_clustering

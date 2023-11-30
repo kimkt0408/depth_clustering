@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
   // Default
   // int min_cluster_size = 20;
   // int max_cluster_size = 100000;
-
+  
   int min_cluster_size = 10;
   int max_cluster_size = 10000;
 
