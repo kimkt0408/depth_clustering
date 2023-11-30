@@ -342,7 +342,7 @@ void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int&
     const auto& cluster = kv.second;
 
     visualization_msgs::Marker marker;
-    marker.header.frame_id = "velodyne1_";  // Adjust as needed
+    marker.header.frame_id = "velodyne1";  // Adjust as needed
     marker.header.stamp = ros::Time::now();
     marker.ns = "object_segments_markers";
     marker.id = id++;
