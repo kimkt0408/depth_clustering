@@ -40,7 +40,9 @@ Visualizer::Visualizer(QWidget* parent, ros::NodeHandle* nh)
   _cloud_obj_storer.SetUpdateListener(this);
 
   if (_nh) {
-  object_segments_pub = _nh->advertise<visualization_msgs::MarkerArray>("/depth_clustering/object_segments", 1);
+    object_segments_marker_array_pub = _nh->advertise<visualization_msgs::MarkerArray>("/depth_clustering/object_segments_marker_array", 1);
+    object_segments_cloud_array_pub = _nh->advertise<depth_clustering::PointCloudArray>("depth_clustering/object_segments_cloud_array", 1);
+
   } else {
     std::cout << "Error: NodeHandle is null in Visualizer constructor." << std::endl;
   }
@@ -53,6 +55,7 @@ void Visualizer::draw() {
   DrawCloud(_cloud);
   
   int id = 0; // Initialize marker ID
+  depth_clustering::PointCloudArray cloud_array_msg;
 
   for (const auto& kv : _cloud_obj_storer.object_clouds()) {
     const auto& cluster = kv.second;
@@ -73,6 +76,7 @@ void Visualizer::draw() {
           std::max(max_point.y(), point.y()),
           std::max(max_point.z(), point.z());
     }
+    
     center /= cluster.size();
     if (min_point.x() < max_point.x()) {
       extent = max_point - min_point;
@@ -82,8 +86,33 @@ void Visualizer::draw() {
     
     if (volume > 0.002f && extent.x() < 0.3 && extent.y() < 0.3 && extent.z() < 4 && extent.z() > 0.3) {    
       DrawCube(center, extent);
-      PublishObjectSegments(kv, id);
+      PublishObjectSegmentsMarkerArray(kv, id);
+
+      // Publish Objest segments with PointCloud2 array
+      sensor_msgs::PointCloud2 ros_cloud;
+      pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_segment(new pcl::PointCloud<pcl::PointXYZ>);
+
+      for (const auto& point : cluster.points()) {
+        pcl::PointXYZ pcl_point;
+        pcl_point.x = point.x();
+        pcl_point.y = point.y();
+        pcl_point.z = point.z();
+        cloud_segment->points.push_back(pcl_point);
+      }
+
+      pcl::toROSMsg(*cloud_segment, ros_cloud);
+      ros_cloud.header.frame_id = "velodyne1";
+      ros_cloud.header.stamp = ros::Time::now();
+      // pcl_conversions::toPCL(ros::Time::now(), ros_cloud.header.stamp);
+      cloud_array_msg.cloud_array.push_back(ros_cloud);
+      // }
     }
+  }
+
+  object_segments_cloud_array_pub.publish(cloud_array_msg);
+
+  if (_nh) {
+    object_segments_cloud_array_pub.publish(cloud_array_msg);
   }
   // ros::Duration(0.1).sleep();  // Small delay to separate the publishing of each cluster
   
@@ -162,105 +191,6 @@ void Visualizer::DrawCube(const Eigen::Vector3f& center,
     glVertex3f(0.0, 0.0, -0.5);
 
     glEnd();
-
-  // if (volume > 0.002f && scale.x() < 0.3 && scale.y() < 0.3 && scale.z() < 4 && scale.z() > 0.3) {
-  //   glColor3f(0.0f, 0.0f, 1.0f);
-  //   glLineWidth(2.0f);
-
-  //   glBegin(GL_LINE_STRIP);
-
-  //   // Bottom of Box
-  //   glVertex3f(-0.5, -0.5, -0.5);
-  //   glVertex3f(-0.5, -0.5, 0.5);
-  //   glVertex3f(0.5, -0.5, 0.5);
-  //   glVertex3f(0.5, -0.5, -0.5);
-  //   glVertex3f(-0.5, -0.5, -0.5);
-
-  //   // Top of Box
-  //   glVertex3f(-0.5, 0.5, -0.5);
-  //   glVertex3f(-0.5, 0.5, 0.5);
-  //   glVertex3f(0.5, 0.5, 0.5);
-  //   glVertex3f(0.5, 0.5, -0.5);
-  //   glVertex3f(-0.5, 0.5, -0.5);
-
-  //   glEnd();
-
-  //   glBegin(GL_LINES);
-  //   // For the Sides of the Box
-
-  //   glVertex3f(-0.5, 0.5, -0.5);
-  //   glVertex3f(-0.5, -0.5, -0.5);
-
-  //   glVertex3f(-0.5, -0.5, 0.5);
-  //   glVertex3f(-0.5, 0.5, 0.5);
-
-  //   glVertex3f(0.5, -0.5, 0.5);
-  //   glVertex3f(0.5, 0.5, 0.5);
-
-  //   glVertex3f(0.5, -0.5, -0.5);
-  //   glVertex3f(0.5, 0.5, -0.5);
-
-  //   glEnd();
-
-  //   glColor3f(1.0f, 1.0f, 0.0f);
-  //   glLineWidth(8.0f);
-
-  //   glBegin(GL_LINES);
-  //   // For the Sides of the Box
-
-  //   glVertex3f(0.0, 0.0, 0.5);
-  //   glVertex3f(0.0, 0.0, -0.5);
-
-  //   glEnd();
-
-    
-  // } else {
-  //   glColor3f(0.3f, 0.3f, 0.3f);
-  //   glLineWidth(0.02f);
-  // }
-
-  // glBegin(GL_LINES);
-  // // For the Sides of the Box
-
-  // glVertex3f(0.0, 0.0, 0.5);
-  // glVertex3f(0.0, 0.0, -0.5);
-
-  // glEnd();
-
-  // glBegin(GL_LINE_STRIP);
-
-  // // Bottom of Box
-  // glVertex3f(-0.5, -0.5, -0.5);
-  // glVertex3f(-0.5, -0.5, 0.5);
-  // glVertex3f(0.5, -0.5, 0.5);
-  // glVertex3f(0.5, -0.5, -0.5);
-  // glVertex3f(-0.5, -0.5, -0.5);
-
-  // // Top of Box
-  // glVertex3f(-0.5, 0.5, -0.5);
-  // glVertex3f(-0.5, 0.5, 0.5);
-  // glVertex3f(0.5, 0.5, 0.5);
-  // glVertex3f(0.5, 0.5, -0.5);
-  // glVertex3f(-0.5, 0.5, -0.5);
-
-  // glEnd();
-
-  // glBegin(GL_LINES);
-  // // For the Sides of the Box
-
-  // glVertex3f(-0.5, 0.5, -0.5);
-  // glVertex3f(-0.5, -0.5, -0.5);
-
-  // glVertex3f(-0.5, -0.5, 0.5);
-  // glVertex3f(-0.5, 0.5, 0.5);
-
-  // glVertex3f(0.5, -0.5, 0.5);
-  // glVertex3f(0.5, 0.5, 0.5);
-
-  // glVertex3f(0.5, -0.5, -0.5);
-  // glVertex3f(0.5, 0.5, -0.5);
-
-  // glEnd();
   glPopMatrix();
 }
 
@@ -288,56 +218,18 @@ void ObjectPtrStorer::OnNewObjectReceived(
   }
 }
 
-// void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) 
-// {
-//   visualization_msgs::MarkerArray marker_array;
-
-//   const auto& cluster = kv.second;
-
-//   visualization_msgs::Marker marker;
-//   marker.header.frame_id = "velodyne1_";  // Adjust as needed
-//   marker.header.stamp = ros::Time::now();
-//   marker.ns = "object_segments_markers";
-//   marker.id = id++;
-//   marker.type = visualization_msgs::Marker::POINTS;
-//   marker.action = visualization_msgs::Marker::ADD;
-//   marker.scale.x = 0.01;  // Size of points
-//   marker.scale.y = 0.01;
-//   marker.scale.z = 0.01;
-//   marker.color.a = 1.0;  // Alpha
-
-//   // Assign a random color
-//   marker.color.r = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-//   marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-//   marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
-
-//   marker.lifetime = ros::Duration(1.0);  // Lifetime of the marker (3 seconds)
-
-//   for (const auto& point : cluster.points()) {
-//       geometry_msgs::Point ros_point;
-//       ros_point.x = point.x();
-//       ros_point.y = point.y();
-//       ros_point.z = point.z();
-//       marker.points.push_back(ros_point);
-//   }
-
-//   marker_array.markers.push_back(marker);
-
-//   if (_nh) {
-//       object_segments_pub.publish(marker_array);
-//   }
-// }
-
-void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) {
-    visualization_msgs::MarkerArray marker_array;
+void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Cloud> kv, int& id) {
+    // 1. Marker Array
+    
+    visualization_msgs::MarkerArray marker_array_msg;
 
     // Clear previous markers
     visualization_msgs::Marker clear_marker;
     clear_marker.action = visualization_msgs::Marker::DELETEALL;
-    marker_array.markers.push_back(clear_marker);
-    object_segments_pub.publish(marker_array);
+    marker_array_msg.markers.push_back(clear_marker);
+    object_segments_marker_array_pub.publish(marker_array_msg);
 
-    marker_array.markers.clear();  // Clear the array for new markers
+    marker_array_msg.markers.clear();  // Clear the array for new markers
 
     const auto& cluster = kv.second;
 
@@ -361,21 +253,21 @@ void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int&
     marker.lifetime = ros::Duration(1.5);  // Lifetime of the marker
 
     for (const auto& point : cluster.points()) {
-        geometry_msgs::Point ros_point;
-        ros_point.x = point.x();
-        ros_point.y = point.y();
-        ros_point.z = point.z();
-        marker.points.push_back(ros_point);
+      geometry_msgs::Point marker_point;
+      marker_point.x = point.x();
+      marker_point.y = point.y();
+      marker_point.z = point.z();
+      marker.points.push_back(marker_point);
     }
 
-    marker_array.markers.push_back(marker);
+    marker_array_msg.markers.push_back(marker);
 
     if (_nh) {
-        object_segments_pub.publish(marker_array);
-    }
+      object_segments_marker_array_pub.publish(marker_array_msg);
+    } 
 }
 
-// void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id) {
+// void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Cloud> kv, int& id) {
 //   visualization_msgs::MarkerArray marker_array;
 //   // int id = 0;
 
@@ -412,7 +304,7 @@ void Visualizer::PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int&
 //   // }
 
 //   if (_nh) {
-//     object_segments_pub.publish(marker_array);
+//     object_segments_marker_array_pub.publish(marker_array);
 //   }
 // }
 

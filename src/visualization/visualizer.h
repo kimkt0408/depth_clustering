@@ -28,6 +28,8 @@
 #include <cstdlib> // For rand() and srand()
 #include <ctime>   // For time(), to seed the random number generator
 
+#include <depth_clustering/PointCloudArray.h>
+
 namespace depth_clustering {
 
 class IUpdateListener {
@@ -80,11 +82,12 @@ class Visualizer : public QGLViewer,
 
  private:
   ros::NodeHandle* _nh;
-  ros::Publisher object_segments_pub;
+  ros::Publisher object_segments_marker_array_pub;
+  ros::Publisher object_segments_cloud_array_pub;
   
   void DrawCloud(const Cloud& cloud);
   void DrawCube(const Eigen::Vector3f& center, const Eigen::Vector3f& scale);
-  void PublishObjectSegments(std::pair<const uint16_t, Cloud> kv, int& id); 
+  void PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Cloud> kv, int& id); 
 
   bool _updated;
   ObjectPtrStorer _cloud_obj_storer;
