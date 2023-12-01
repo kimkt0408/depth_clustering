@@ -39,6 +39,7 @@
 #include "projections/spherical_projection.h"
 #include "utils/pose.h"
 #include "utils/useful_typedefs.h"
+#include <ros/ros.h>  // Include ROS header for using ros::Time
 
 namespace depth_clustering {
 
@@ -54,7 +55,8 @@ class Cloud {
   using Ptr = shared_ptr<Cloud>;
   using ConstPtr = shared_ptr<const Cloud>;
 
-  Cloud() : _points{}, _pose{}, _sensor_pose{} {}
+  // Cloud() : _points{}, _pose{}, _sensor_pose{} {}
+  Cloud() : _points{}, _pose{}, _sensor_pose{}, _stamp{} {}
   explicit Cloud(const Cloud& cloud);
   explicit Cloud(const Pose& pose) : _pose(pose), _sensor_pose() {}
 
@@ -67,6 +69,9 @@ class Cloud {
 
   inline Pose& sensor_pose() { return _sensor_pose; }
   inline const Pose& sensor_pose() const { return _sensor_pose; }
+
+  inline ros::Time& stamp() { return _stamp; }
+  inline const ros::Time& stamp() const { return _stamp; }
 
   inline void push_back(const RichPoint& point) { _points.push_back(point); }
   inline size_t size() const { return _points.size(); }
@@ -100,6 +105,12 @@ class Cloud {
   static Cloud::Ptr FromImage(const cv::Mat& image,
                               const ProjectionParams& params);
 
+  inline void SetStamp(const ros::Time& stamp) { _stamp = stamp; }
+
+  // void SetTimestamp(const ros::Time& stamp);
+
+  // ros::Time GetTimestamp();
+
 // PCL specific part
 #if PCL_FOUND
   typename pcl::PointCloud<pcl::PointXYZL>::Ptr ToPcl() const;
@@ -120,6 +131,7 @@ class Cloud {
 
   Pose _pose;
   Pose _sensor_pose;
+  ros::Time _stamp;
 
   CloudProjection::Ptr _projection = nullptr;
 };

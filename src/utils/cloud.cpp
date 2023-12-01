@@ -22,10 +22,24 @@
 
 namespace depth_clustering {
 
+// Cloud::Cloud(const Cloud& cloud)
+//     : _points{cloud.points()},
+//       _pose(cloud.pose()),
+//       _sensor_pose(cloud.sensor_pose()) {
+//   if (!cloud.projection_ptr()) {
+//     // no need to copy projection, there is none yet
+//     return;
+//   }
+//   // projection is a polymorphic type, we use clone therefore
+//   auto ptr = cloud.projection_ptr()->Clone();
+//   _projection = ptr;
+// }
+
 Cloud::Cloud(const Cloud& cloud)
     : _points{cloud.points()},
       _pose(cloud.pose()),
-      _sensor_pose(cloud.sensor_pose()) {
+      _sensor_pose(cloud.sensor_pose()),
+      _stamp(cloud.stamp())  {
   if (!cloud.projection_ptr()) {
     // no need to copy projection, there is none yet
     return;

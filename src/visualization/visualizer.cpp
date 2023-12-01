@@ -235,7 +235,7 @@ void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Clou
 
     visualization_msgs::Marker marker;
     marker.header.frame_id = "velodyne1";  // Adjust as needed
-    marker.header.stamp = ros::Time::now();
+    marker.header.stamp = cluster.stamp();
     marker.ns = "object_segments_markers";
     marker.id = id++;
     marker.type = visualization_msgs::Marker::POINTS;

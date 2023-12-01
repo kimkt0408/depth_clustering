@@ -143,6 +143,7 @@ Cloud::Ptr CloudOdomRosSubscriber::RosCloudToCloud(
   uint32_t y_offset = msg->fields[1].offset;
   uint32_t z_offset = msg->fields[2].offset;
   uint32_t ring_offset = msg->fields[4].offset;
+  ros::Time stamp = msg->header.stamp;
 
   Cloud cloud;
   for (uint32_t point_start_byte = 0, counter = 0;
@@ -156,7 +157,8 @@ Cloud::Ptr CloudOdomRosSubscriber::RosCloudToCloud(
     // point.z *= -1;  // hack
     cloud.push_back(point);
   }
-
+  cloud.SetStamp(stamp);
+  
   return make_shared<Cloud>(cloud);
 }
 
