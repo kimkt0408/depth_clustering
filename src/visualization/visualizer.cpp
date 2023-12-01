@@ -102,8 +102,7 @@ void Visualizer::draw() {
 
       pcl::toROSMsg(*cloud_segment, ros_cloud);
       ros_cloud.header.frame_id = "velodyne1";
-      ros_cloud.header.stamp = ros::Time::now();
-      // pcl_conversions::toPCL(ros::Time::now(), ros_cloud.header.stamp);
+      ros_cloud.header.stamp = cluster.stamp();
       cloud_array_msg.cloud_array.push_back(ros_cloud);
       // }
     }
@@ -250,7 +249,7 @@ void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Clou
     marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
     marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 
-    marker.lifetime = ros::Duration(1.5);  // Lifetime of the marker
+    marker.lifetime = ros::Duration(1.0);  // Lifetime of the marker
 
     for (const auto& point : cluster.points()) {
       geometry_msgs::Point marker_point;

@@ -107,10 +107,6 @@ class Cloud {
 
   inline void SetStamp(const ros::Time& stamp) { _stamp = stamp; }
 
-  // void SetTimestamp(const ros::Time& stamp);
-
-  // ros::Time GetTimestamp();
-
 // PCL specific part
 #if PCL_FOUND
   typename pcl::PointCloud<pcl::PointXYZL>::Ptr ToPcl() const;
