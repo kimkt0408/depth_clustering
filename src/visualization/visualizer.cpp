@@ -103,14 +103,15 @@ void Visualizer::draw() {
       // }
     }
   }
-
-  // object_segments_cloud_array_pub.publish(cloud_array_msg);
+  
+  if (cloud_array_msg.cloud_array.size()){
+    sensor_msgs::PointCloud2 ros_cloud_tmp;
+    ros_cloud_tmp = cloud_array_msg.cloud_array[0];
+  }
 
   if (_nh) {
     object_segments_cloud_array_pub.publish(cloud_array_msg);
   }
-  // ros::Duration(0.1).sleep();  // Small delay to separate the publishing of each cluster
-  
 }
 
 void Visualizer::init() {
@@ -218,10 +219,10 @@ void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Clou
     visualization_msgs::MarkerArray marker_array_msg;
 
     // Clear previous markers
-    visualization_msgs::Marker clear_marker;
-    clear_marker.action = visualization_msgs::Marker::DELETEALL;
-    marker_array_msg.markers.push_back(clear_marker);
-    object_segments_marker_array_pub.publish(marker_array_msg);
+    // visualization_msgs::Marker clear_marker;
+    // clear_marker.action = visualization_msgs::Marker::DELETEALL;
+    // marker_array_msg.markers.push_back(clear_marker);
+    // object_segments_marker_array_pub.publish(marker_array_msg);
 
     marker_array_msg.markers.clear();  // Clear the array for new markers
 
