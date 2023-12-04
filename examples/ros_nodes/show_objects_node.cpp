@@ -121,11 +121,8 @@ int main(int argc, char* argv[]) {
   // clusterer.SetDiffType(DiffFactory::DiffType::ANGLES);
   clusterer.SetDiffType(DiffFactory::DiffType::ANGLES_PRECOMPUTED);
 
-  std::cout << "1============================" << std::endl; 
   subscriber.AddClient(&depth_ground_remover);
-  std::cout << "2============================" << std::endl; 
   depth_ground_remover.AddClient(&clusterer);
-  std::cout << "3============================" << std::endl; 
   clusterer.AddClient(visualizer.object_clouds_client());
   subscriber.AddClient(&visualizer);
 
@@ -138,16 +135,6 @@ int main(int argc, char* argv[]) {
 
   auto exit_code = application.exec();
 
-  std::cout << "4============================" << std::endl; 
-  // clusterer.AddClient(visualizer.object_clouds_client());
-
-  // for (const auto& kv : visualizer.object_clouds_client()->object_clouds()) {
-  //   const auto& cloud = kv.second; // kv is a pair, where kv.first is the key and kv.second is the Cloud object
-  //   std::cout << "************ " << kv.first << " has timestamp " << cloud.stamp() << std::endl;
-  // }
-  // std::cout << "============================" << std::endl;
-
-  // if we close application, still wait for ros to shutdown
   ros::waitForShutdown();
   return exit_code;
 }
