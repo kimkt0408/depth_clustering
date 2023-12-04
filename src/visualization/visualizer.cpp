@@ -28,13 +28,6 @@ using std::thread;
 using std::unordered_map;
 using std::vector;
 
-// static vector<array<int, 3>> COLORS;
-
-// Visualizer::Visualizer(QWidget* parent)
-//     : QGLViewer(parent), AbstractClient<Cloud>(), _updated{false} {
-//   _cloud_obj_storer.SetUpdateListener(this);
-// }
-
 Visualizer::Visualizer(QWidget* parent, ros::NodeHandle* nh)
     : QGLViewer(parent), AbstractClient<Cloud>(), _nh(nh) {
   _cloud_obj_storer.SetUpdateListener(this);
@@ -59,6 +52,7 @@ void Visualizer::draw() {
 
   for (const auto& kv : _cloud_obj_storer.object_clouds()) {
     const auto& cluster = kv.second;
+
     Eigen::Vector3f center = Eigen::Vector3f::Zero();
     Eigen::Vector3f extent = Eigen::Vector3f::Zero();
     Eigen::Vector3f max_point(std::numeric_limits<float>::lowest(),
@@ -85,6 +79,8 @@ void Visualizer::draw() {
     float volume = extent.x() * extent.y() * extent.z();
     
     if (volume > 0.002f && extent.x() < 0.3 && extent.y() < 0.3 && extent.z() < 4 && extent.z() > 0.3) {    
+      
+      
       DrawCube(center, extent);
       PublishObjectSegmentsMarkerArray(kv, id);
 
@@ -108,7 +104,7 @@ void Visualizer::draw() {
     }
   }
 
-  object_segments_cloud_array_pub.publish(cloud_array_msg);
+  // object_segments_cloud_array_pub.publish(cloud_array_msg);
 
   if (_nh) {
     object_segments_cloud_array_pub.publish(cloud_array_msg);
@@ -219,7 +215,6 @@ void ObjectPtrStorer::OnNewObjectReceived(
 
 void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Cloud> kv, int& id) {
     // 1. Marker Array
-    
     visualization_msgs::MarkerArray marker_array_msg;
 
     // Clear previous markers
@@ -231,7 +226,6 @@ void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Clou
     marker_array_msg.markers.clear();  // Clear the array for new markers
 
     const auto& cluster = kv.second;
-
     visualization_msgs::Marker marker;
     marker.header.frame_id = "velodyne1";  // Adjust as needed
     marker.header.stamp = cluster.stamp();
@@ -249,7 +243,7 @@ void Visualizer::PublishObjectSegmentsMarkerArray(std::pair<const uint16_t, Clou
     marker.color.g = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
     marker.color.b = static_cast<float>(rand()) / static_cast<float>(RAND_MAX);
 
-    marker.lifetime = ros::Duration(1.0);  // Lifetime of the marker
+    marker.lifetime = ros::Duration(1.5);  // Lifetime of the marker
 
     for (const auto& point : cluster.points()) {
       geometry_msgs::Point marker_point;

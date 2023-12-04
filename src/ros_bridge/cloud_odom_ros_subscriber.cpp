@@ -158,7 +158,7 @@ Cloud::Ptr CloudOdomRosSubscriber::RosCloudToCloud(
     cloud.push_back(point);
   }
   cloud.SetStamp(stamp);
-  
+
   return make_shared<Cloud>(cloud);
 }
 

@@ -135,6 +135,7 @@ class ImageBasedClusterer : public AbstractClusterer {
           const auto& point = cloud.points()[point_idx];
           clusters[label].push_back(point);
         }
+        clusters[label].SetStamp(cloud.stamp());
       }
     }
 

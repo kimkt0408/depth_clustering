@@ -103,6 +103,17 @@ int main(int argc, char* argv[]) {
   // Visualizer visualizer;
   visualizer.show();
 
+  // // Assuming you have a key or you just want to print the timestamp of the first cloud
+  // const auto& object_clouds = visualizer.object_clouds_client()->object_clouds();
+  // if (!object_clouds.empty()) {
+  //   // Accessing the first element's timestamp
+  //   auto first_cloud_iter = object_clouds.begin();
+  //   const auto& first_cloud = first_cloud_iter->second; // 'second' is the Cloud object in the map pair
+  //   std::cout << "1**********************************" << first_cloud.stamp() << std::endl;
+  // } else {
+  //   std::cout << "2**********************************" << std::endl;
+  // }
+
   auto depth_ground_remover = DepthGroundRemover(
       *proj_params_ptr, ground_remove_angle, smooth_window_size);
 
@@ -110,8 +121,11 @@ int main(int argc, char* argv[]) {
   // clusterer.SetDiffType(DiffFactory::DiffType::ANGLES);
   clusterer.SetDiffType(DiffFactory::DiffType::ANGLES_PRECOMPUTED);
 
+  std::cout << "1============================" << std::endl; 
   subscriber.AddClient(&depth_ground_remover);
+  std::cout << "2============================" << std::endl; 
   depth_ground_remover.AddClient(&clusterer);
+  std::cout << "3============================" << std::endl; 
   clusterer.AddClient(visualizer.object_clouds_client());
   subscriber.AddClient(&visualizer);
 
@@ -123,6 +137,15 @@ int main(int argc, char* argv[]) {
   spinner.start();
 
   auto exit_code = application.exec();
+
+  std::cout << "4============================" << std::endl; 
+  // clusterer.AddClient(visualizer.object_clouds_client());
+
+  // for (const auto& kv : visualizer.object_clouds_client()->object_clouds()) {
+  //   const auto& cloud = kv.second; // kv is a pair, where kv.first is the key and kv.second is the Cloud object
+  //   std::cout << "************ " << kv.first << " has timestamp " << cloud.stamp() << std::endl;
+  // }
+  // std::cout << "============================" << std::endl;
 
   // if we close application, still wait for ros to shutdown
   ros::waitForShutdown();
