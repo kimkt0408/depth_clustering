@@ -8,6 +8,10 @@
     <node pkg="depth_clustering" type="show_objects_node.sh" name="show_objects_node" output="screen"/>
 
     <!-- Rviz visualization -->
+    <!-- For depth clustering: frame_id: base_link -->
     <arg name="rviz"   value="/home/kimkt0408/rviz/depth_clustering.rviz" /> 
+    
+    <!-- For the all results from P-AgSLAM -->
+    <!-- <arg name="rviz" value="/home/kimkt0408/rviz/gps_localization_.rviz" /> -->
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rviz)" />
 </launch>
